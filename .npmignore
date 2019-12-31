@@ -1,0 +1,8 @@
+.gitignore
+*.json
+*.ts
+!*.d.ts
+/test
+/.vscode
+*.DS_Store
+.github

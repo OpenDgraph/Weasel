@@ -1,0 +1,30 @@
+{
+  "name": "Weasel-dgraph",
+  "version": "0.1.0",
+  "description": "A direct GraphQL \"converter\" to Dgraph's `GraphQL+-` language.",
+  "main": "lib/index.js",
+  "type": "lib",
+  "scripts": {
+    "build": "rm -Rf lib && tsc --pretty -p . "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MichelDiz/Weasel.git"
+  },
+  "keywords": [
+    "dgraph",
+    "graphql",
+    "graphql+-",
+    "ast"
+  ],
+  "author": "Michel Conrado Diz",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/MichelDiz/Weasel/issues"
+  },
+  "homepage": "https://github.com/MichelDiz/Weasel#readme",
+  "devDependencies": {
+    "prettier": "1.19.1",
+    "typescript": "^3.7.4"
+  }
+}
