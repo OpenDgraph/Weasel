@@ -8,6 +8,10 @@ Weasel is a direct GraphQL "converter" to Dgraph's `GraphQL+-` language. It is p
 
 This project is inspired by join-monster. And it uses the Graphql's AST Object to do it's "magic".
 
+# Before you try out.
+
+This code is extremely embryonic and simple. Mutations are not yet supported. Just queries. There is a lot of work to do yet.
+
 # Usage
 
 ```JS
