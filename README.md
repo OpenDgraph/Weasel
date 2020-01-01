@@ -11,6 +11,7 @@ This project is inspired by join-monster. And it uses the Graphql's AST Object t
 # Before you try out.
 
 This code is extremely embryonic and simple. Mutations are not yet supported. Just queries. There is a lot of work to do yet.
+BTW, help is welcome!
 
 # Usage
 
@@ -35,6 +36,20 @@ directive @reverse on FIELD | FIELD_DEFINITION
 
 ```JS
 import { extraction } from 'weasel-dgraph';
+```
+
+And
+
+```JS
+export default {
+  Query: {
+    getObjects: async (parent, args, context, resolveInfo) => {
+      const queryConverted = extraction(resolveInfo, args, context, reservedList); // Here it will parse AST and convert to GraphQL+-
+      const res = getAll.Objects(args, queryConverted); // Here goes your resolving code to Dgraph (works with dgraph-js and dgraph-js-http).
+      return res;
+    }
+     }
+};
 ```
 
 You will need to enter the special definitions of your Schema.
