@@ -14,6 +14,23 @@ This code is extremely embryonic and simple. Mutations are not yet supported. Ju
 
 # Usage
 
+First create your basic apollo-server.
+
+Add to your GraphQL Schema a especial GraphQL Directive.
+e.g:
+
+```GRAPHQL
+directive @reverse on FIELD | FIELD_DEFINITION
+
+# Also in the Types you have to define where the directive goes.
+
+  type User {
+    id: ID
+    friend: [Friend] @reverse
+  }
+
+```
+
 ```JS
 import { extraction } from 'weasel-dgraph';
 ```
