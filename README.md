@@ -31,6 +31,8 @@ directive @reverse on FIELD | FIELD_DEFINITION
 
 ```
 
+## At your resolvers code import the weasel.
+
 ```JS
 import { extraction } from 'weasel-dgraph';
 ```
