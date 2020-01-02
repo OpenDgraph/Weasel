@@ -8,7 +8,7 @@ Weasel is a direct GraphQL "converter" to Dgraph's `GraphQL+-` language. It is p
 
 This project is inspired by join-monster. And it uses the Graphql's AST Object to do it's "magic".
 
-# Before you try out.
+# Before you try out
 
 This code is extremely embryonic and simple. Mutations are not yet supported. Just queries. There is a lot of work to do yet.
 BTW, help is welcome!
@@ -30,9 +30,14 @@ directive @reverse on FIELD | FIELD_DEFINITION
     friend: [Friend] @reverse
   }
 
+# Add the argument in the Query type.
+  type Query {
+    getUsers(reverse: Boolean): [User]
+  }
+
 ```
 
-## At your resolvers code import the weasel.
+## At your resolvers code import the weasel
 
 ```JS
 import { extraction } from 'weasel-dgraph';
