@@ -70,7 +70,7 @@ To know which predicates of your schema have a specific directive you need to qu
 
 >You can check the Dgraph documentation for other directives.
 
-This code below is just an example of how to query Dgraph's Schema and how to filter schema to get only those predicates with the required directive.
+This code below is just an example of how to query Dgraph's Schema and how to filter schema to get only those predicates with the required directive. You can do it manually tho.
 
 ```JS
 const { doQuery } = require('./utils/main.js');
@@ -87,4 +87,26 @@ async function getShema() {
 }
 
 getShema();
+```
+
+# Running GraphQL queries
+
+To be able to use the reverse directive. You need first pass it as a GraphQL argument `reverse:true` and add the `@reverse` directive in the reversible edge.
+> Ids will be converted to `uid`.
+
+```GRAPHQL
+{
+  getObjects(reverse:true) {
+    id
+    name
+    friend @reverse {
+      id
+      name
+    }
+    otherEdge @reverse {
+      id
+      name
+    }
+  }
+}
 ```
