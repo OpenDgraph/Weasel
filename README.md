@@ -10,7 +10,7 @@ This project is inspired by join-monster. And it uses the Graphql's AST Object t
 
 # Before you try out
 
-This code is extremely embryonic and simple. Mutations are not yet supported. Just queries. There is a lot of work to do yet.
+This code is extremely embryonic and simple. There is a lot of work to do yet.
 BTW, help is welcome!
 
 # Usage
@@ -50,12 +50,20 @@ export default {
   Query: {
     getObjects: async (parent, args, context, resolveInfo) => {
       const queryConverted = extraction(resolveInfo, args, context, reservedList); // Here it will parse AST and convert to GraphQL+-
-      const res = getAll.Objects(args, queryConverted); // Here goes your resolving code to Dgraph (works with dgraph-js and dgraph-js-http).
-      return res;
+      return res = getAll.Objects(args, queryConverted); // Here goes your resolving code to Dgraph (works with dgraph-js and dgraph-js-http).
+    },
+  Mutation: {
+    CreateObject: async (_, args, context, resolveInfo) => {
+      const queryConverted = extraction(resolveInfo, args, context, reservedList);
+      const mutation = mutate.CreateObj(args.input); // you gonna use the graphql's input object to mutate in Dgraph.
+      return res = get.Object(args, queryConverted, mutation.uid); // you have to return the UID from the mutation to do a query.
     }
+  }
      }
 };
 ```
+
+Todo mutations, you need to execute two Dgraph operations. One mutation and then one query. Due to GraphQL's nature of doing a query and returning what was mutated. Dgraph doesn't have this. So you need to do two operations.
 
 You will need to enter the special definitions of your Schema.
 
@@ -73,7 +81,7 @@ const reservedList = {
 
 To know which predicates of your schema have a specific directive you need to query for:
 
->You can check the Dgraph documentation for other directives.
+> You can check the Dgraph documentation for other directives.
 
 This code below is just an example of how to query Dgraph's Schema and how to filter schema to get only those predicates with the required directive. You can do it manually tho.
 
@@ -97,6 +105,7 @@ getShema();
 # Running GraphQL queries
 
 To be able to use the reverse directive. You need first pass it as a GraphQL argument `reverse:true` and add the `@reverse` directive in the reversible edge.
+
 > Ids will be converted to `uid`.
 
 ```GRAPHQL
