@@ -50,13 +50,13 @@ export default {
   Query: {
     getObjects: async (parent, args, context, resolveInfo) => {
       const queryConverted = extraction(resolveInfo, args, context, reservedList); // Here it will parse AST and convert to GraphQL+-
-      return res = getAll.Objects(args, queryConverted); // Here goes your resolving code to Dgraph (works with dgraph-js and dgraph-js-http).
+      return getAll.Objects(args, queryConverted); // Here goes your resolving code to Dgraph (works with dgraph-js and dgraph-js-http).
     },
   Mutation: {
     CreateObject: async (_, args, context, resolveInfo) => {
       const queryConverted = extraction(resolveInfo, args, context, reservedList);
       const mutation = mutate.CreateObj(args.input); // you gonna use the graphql's input object to mutate in Dgraph.
-      return res = get.Object(args, queryConverted, mutation.uid); // you have to return the UID from the mutation to do a query.
+      return get.Object(args, queryConverted, mutation.uid); // you have to return the UID from the mutation to do a query.
     }
   }
      }
