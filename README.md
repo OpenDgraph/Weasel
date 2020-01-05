@@ -104,13 +104,13 @@ getShema();
 
 # Running GraphQL queries
 
-To be able to use the reverse directive. You need first pass it as a GraphQL argument `reverse:true` and add the `@reverse` directive in the reversible edge.
+To be able to use the reverse directive. You need first pass the `@reverse` directive in the reversible edge(s).
 
 > Ids will be converted to `uid`.
 
 ```GRAPHQL
 {
-  getObjects(reverse:true) {
+  getObjects(type: "\"Object\"") {
     id
     name
     friend @reverse {
