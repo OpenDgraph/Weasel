@@ -1,4 +1,4 @@
-export const _treat = (args: any, obj: any, reservedList: any) => {
+export default (args: any, obj: any, reservedList: any) => {
 	let theQuery = obj.body;
 
 	let bodyPattern =
@@ -37,5 +37,5 @@ export const _treat = (args: any, obj: any, reservedList: any) => {
 
 	let exBody = extractBody[1] ? extractBody[1] : extractBody[0];
 
-	return [resolveReverse(exBody)];
+	return resolveReverse(exBody);
 };
