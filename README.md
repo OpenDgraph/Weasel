@@ -22,6 +22,7 @@ e.g:
 
 ```GRAPHQL
 directive @reverse on FIELD | FIELD_DEFINITION
+directive @filter(func: String) on FIELD | FIELD_DEFINITION
 
 # Also in the Types you have to define where the directive goes.
 
@@ -32,7 +33,7 @@ directive @reverse on FIELD | FIELD_DEFINITION
 
 # Add the argument in the Query type.
   type Query {
-    getUsers(reverse: Boolean): [User]
+    getUsers(func: String): [User] @filter #if you pretend to use filters at Root you need to add them in your query using the graphql custom directive `@filter`.
   }
 
 ```
@@ -108,9 +109,30 @@ To be able to use the reverse directive. You need first pass the `@reverse` dire
 
 > Ids will be converted to `uid`.
 
+Using Dgraph Type at query root.
+
 ```GRAPHQL
 {
   getObjects(type: "\"Object\"") {
+    id
+    name
+    friend @reverse {
+      id
+      name
+    }
+    otherEdge @reverse {
+      id
+      name
+    }
+  }
+}
+```
+
+Using Dgraph's functions at query root.
+
+```GRAPHQL
+{
+  getObjects(func: eq(dgraph.type, \"Object\")) {
     id
     name
     friend @reverse {
