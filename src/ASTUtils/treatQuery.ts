@@ -9,7 +9,11 @@ export default (args: any, obj: any, reservedList: any) => {
 	function resolveReverse(obj: any) {
 		// Todo: This is pretty "hacky". Need a better design.
 		try {
-			const patterns = args.reverse ? [...reservedList.reverse, ' id\n'] : [' id\n'];
+			const hasReverse = (obj: string) => {
+				const regex = new RegExp('@reverse', 'g');
+				return obj.match(regex) ? true : false;
+			};
+			const patterns = hasReverse(obj) ? [...reservedList.reverse, ' id\n'] : [' id\n'];
 			let uniqueMatchs;
 			let allMatchs: any;
 			const regex = new RegExp(patterns.join('|'), 'g');
