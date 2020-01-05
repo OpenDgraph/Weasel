@@ -1,4 +1,4 @@
-export const iterate = (obj: any) => {
+export default (obj: any) => {
 	let iterate_ = (obj: any) => {
 		let new_obj = [obj].map(e => {
 			return {
