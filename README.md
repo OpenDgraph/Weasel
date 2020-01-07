@@ -15,6 +15,8 @@ BTW, help is welcome!
 
 # Usage
 
+> Check the example in `./example/*`
+
 First create your basic apollo-server.
 
 Add to your GraphQL Schema a especial GraphQL Directive.

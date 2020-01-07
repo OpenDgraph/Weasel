@@ -1,0 +1,14 @@
+directive @reverse on FIELD | FIELD_DEFINITION
+directive @filter(func: String) on FIELD | FIELD_DEFINITION
+directive @facet on FIELD | FIELD_DEFINITION
+
+type Person {
+	id: String
+	name: String
+	mobile: String
+	car: String
+}
+
+type Query {
+	getAlice(func: String): Person
+}
