@@ -1,6 +1,6 @@
 export default (obj: any) => {
 	let iterate_ = (obj: any) => {
-		let new_obj = [obj].map(e => {
+		let new_obj: any = [obj].map(e => {
 			return {
 				kind: e.kind,
 				alias: e.alias,
@@ -10,13 +10,14 @@ export default (obj: any) => {
 			};
 		})[0];
 
-		var walked = [];
-		var stack = [
+		var walked: any[] = [];
+		var stack: any[] = [
 			{
 				obj: new_obj,
 				stack: ''
 			}
 		];
+
 		while (stack.length > 0) {
 			var item: any = stack.pop();
 			var obj: any = item.obj;
