@@ -1,4 +1,4 @@
-import { extraction } from 'weasel-dgraph';
+import { extraction } from '../src';
 import { doQuery } from './utils/main';
 
 const reservedList = {

@@ -134,7 +134,7 @@ Using Dgraph's functions at query root.
 
 ```GRAPHQL
 {
-  getObjects(func: eq(dgraph.type, \"Object\")) {
+  getObjects(func: "eq(dgraph.type, \"Object\")") {
     id
     name
     friend @reverse {
@@ -145,6 +145,21 @@ Using Dgraph's functions at query root.
       id
       name
     }
+  }
+}
+```
+
+Using Value Facets
+
+> Because GraphQL does not support names with special characters (Such as | pipe, . dot and so on that Dgraph supports). You are required to use aliases with Facets.
+
+```GraphQL
+{
+  getAlice(func:"eq(name, \"Alice\")"){
+    id
+    name
+    mobile @facets(aliases: "mobile_since:since")
+    mobile_since
   }
 }
 ```
