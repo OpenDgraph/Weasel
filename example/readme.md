@@ -36,7 +36,7 @@ And of course, you can create mutations with strong GraphQL Type. Because Dgraph
 
 This is an example of the mutation.
 
-````GraphQL
+```GraphQL
 mutation {
   addDataset(input: {
     payload: "PASTE HERE THE ESCAPED DATASET" #use "stringify" to escape it.
