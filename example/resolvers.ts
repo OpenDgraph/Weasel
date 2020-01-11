@@ -1,6 +1,5 @@
 import { extraction } from '../src';
 import { doQuery, doMutation } from './utils/main';
-import lodash from 'lodash';
 
 const reservedList = {
 	reverse: ['edge @reverse']

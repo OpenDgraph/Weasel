@@ -1,5 +1,4 @@
 import * as dgraph from 'dgraph-js-http';
-//import lodash from 'lodash';
 
 function newClientStub() {
 	return new dgraph.DgraphClientStub('http://localhost:8080', false);
