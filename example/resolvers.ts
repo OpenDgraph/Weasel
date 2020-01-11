@@ -1,5 +1,6 @@
 import { extraction } from '../src';
-import { doQuery } from './utils/main';
+import { doQuery, doMutation } from './utils/main';
+import lodash from 'lodash';
 
 const reservedList = {
 	reverse: ['edge @reverse']
@@ -10,7 +11,14 @@ export default {
 		getAlice: async (parent: any, args: any, context: any, resolveInfo: any) => {
 			const query = extraction(resolveInfo, args, context, reservedList);
 			return await doQuery({ query }).then(res => {
-				return res.getAlice[0];
+				return res.getAlice;
+			});
+		}
+	},
+	Mutation: {
+		addDataset: async (parent: any, args: any, context: any, resolveInfo: any) => {
+			return await doMutation(args.input).then(res => {
+				return res;
 			});
 		}
 	}

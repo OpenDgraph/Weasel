@@ -11,5 +11,27 @@ type Person {
 }
 
 type Query {
-	getAlice(func: String): Person
+	getAlice(func: String): [Person]
+}
+
+input PersonInput {
+	name: String
+	mobile: String
+	car: String
+}
+
+input Dataset {
+	name: String
+	mobile: String
+	car: String
+	friend: [PersonInput]
+	dgraph_type: String
+}
+
+input RDF {
+	payload: String
+}
+
+type Mutation {
+	addDataset(input: RDF): String
 }
