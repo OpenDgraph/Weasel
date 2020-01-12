@@ -1,7 +1,7 @@
 export default (args: any, obj: any, reservedList: any, listDirectives: any) => {
 	let theQuery = obj.body;
 
-	let facetsPattern = /\@facets\([^]+\)/gim;
+	let facetsPattern = /\@facets\([^\n]+\)/gim;
 	let ReversePattern = /\@reverse/gim;
 	let bodyPattern =
 		(!!args && !!args.reverse) || !!args.dgraph ? /\{[^)]+\}/gim : /\ {[^)]+\}/gim;
@@ -50,9 +50,8 @@ export default (args: any, obj: any, reservedList: any, listDirectives: any) => 
 	let exBody = extractBody[1] ? extractBody[1] : extractBody[0];
 
 	listDirectives.forEach((element: any) => {
-		let patterns: any = Object.keys(element);
-		let regex = new RegExp(`${patterns} `, 'g');
-		exBody = exBody.replace(regex, `mobile ${element[patterns]}`);
+		let regex = new RegExp(`${element.name} `, 'g');
+		exBody = exBody.replace(regex, `${element.name} ${element.directive}`);
 	});
 
 	return resolveReverse(exBody);

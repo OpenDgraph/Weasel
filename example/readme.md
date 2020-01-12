@@ -7,6 +7,11 @@
     name
     mobile @facets(aliases: "mobile_since:since")
     mobile_since
+    friend {
+      name
+      car @facets(aliases: "car_since:since")
+      car_since
+    }
   }
 }
 ```

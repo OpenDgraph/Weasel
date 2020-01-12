@@ -57,12 +57,13 @@ export default (fieldNode: any) => {
 		switch (true) {
 			case !!isFacet: // Case isFacet isn't false
 				listDirectives.push({
-					[name]: `@facets${
+					directive: `@facets${
 						!!directives && !!directives[0].arguments[0]
 							? `(${directives[0].arguments[0].value.value})`
 							: ``
 					}`,
-					level
+					level,
+					name
 				});
 
 				break;
