@@ -15,17 +15,28 @@ type Query {
 }
 
 input PersonInput {
+	uid: String!
 	name: String
 	mobile: String
 	car: String
-}
-
-input Dataset {
-	name: String
-	mobile: String
-	car: String
+	rated: [MovieInput]
 	friend: [PersonInput]
 	dgraph_type: String
+	dgraph_facets: FacetsInput
+}
+
+input FacetsInput {
+	name: String
+	friend: String
+	mobile: String
+	car: String
+	rating: String
+}
+
+input MovieInput {
+	uid: String!
+	dgraph_type: String
+	dgraph_facets: FacetsInput
 }
 
 input RDF {
@@ -34,4 +45,5 @@ input RDF {
 
 type Mutation {
 	addDataset(input: RDF): String
+	addPerson(input: [PersonInput]): String
 }

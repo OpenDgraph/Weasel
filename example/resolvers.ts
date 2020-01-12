@@ -2,7 +2,7 @@ import { extraction } from '../src';
 import { doQuery, doMutation } from './utils/main';
 
 const reservedList = {
-	reverse: ['edge @reverse']
+	reverse: ['friend @reverse']
 };
 
 export default {
@@ -19,6 +19,10 @@ export default {
 			return await doMutation(args.input).then(res => {
 				return res;
 			});
+		},
+		addPerson: async (parent: any, args: any, context: any, resolveInfo: any) => {
+			console.log(args.input); // Create here your way to resolve this mutation
+			return false;
 		}
 	}
 };
