@@ -93,7 +93,7 @@ _:charlie <rated> _:movie2 (rating=5) .
 _:charlie <rated> _:movie3 (rating=1) .`);
 ```
 
-And of course, you can create mutations with strong GraphQL Types. Because Dgraph supports the input of JSON like objects. In this approach, you will create a default input type (However, Facets are not supported in the default GraphQL input). You can check `./schema.graphql` file in the input and mutation part.
+And of course, you can create mutations with strong GraphQL Types. Because Dgraph supports the input of JSON like objects. In this approach, you will create a default input type (However, RDF and Facets are not supported in the default GraphQL input). You can check `./schema.graphql` file in the input and mutation part.
 
 ```Graphql
 mutation {
