@@ -11,7 +11,6 @@ export default {
 			const query = extraction(resolveInfo, args, context, reservedList);
 			let dgraphQuery = query[0];
 			return await doQuery({ query: dgraphQuery }).then(res => {
-				console.log(query[1]);
 				return res.getAlice;
 			});
 		}

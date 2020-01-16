@@ -31,7 +31,11 @@ export const mountUpsert = (args: any, query: any) => {
 	let checkdtype: boolean = hasdtype(a);
 
 	if ('type' in args && !checkdtype) {
-		'emailG' in args.input ? null : (a = a.replace(last, `","dgraph.type":${args.type}}`));
+		'dgraph_type' in args.input ? null : (a = a.replace(last, `","dgraph.type":${args.type}}`));
+	}
+
+	if ('type' in args === false && !checkdtype) {
+		'dgraph.type' in args.input ? null : (a = a.replace(last, `","dgraph.type": "unknown"}`));
 	}
 
 	return `{"query": ${b},"set": ${a}}`;
