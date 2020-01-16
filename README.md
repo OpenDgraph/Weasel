@@ -168,3 +168,63 @@ Using Value Facets
   }
 }
 ```
+
+# Mutation and Upsert Block
+
+All these examples you can find in ./examples
+
+To insert data into Dgraph using Weasel, you can choose two ways. Payload or a Typed input.
+
+```GraphQL
+mutation {
+  addDataset(input: {
+    payload: " ... "
+  })
+}
+```
+
+```GraphQL
+mutation {
+  addPerson(input: [{
+    uid: "_:Alice",
+    name: "Alice",
+    mobile: "040123456",
+    car: "MA0123"} (...) ])
+}
+```
+
+Upsert Block using type and val (mandatory in case of upsert)
+
+```GraphQL
+mutation {
+  upsertUser(type: "\"User\"",input: {
+    uid: "uid(v)",
+    name: "test",
+    email: "user22@company1.io",
+    dgraph_type: "Person"
+  }) @filter(func: "eq(email, \"user22@company1.io\")") {
+    id @var(val:"v")
+    name
+    email
+  }
+}
+```
+
+Upsert Block not using type
+
+> The field "dgraph_type" will be converted to "dgraph.type".
+
+```GraphQL
+mutation {
+  upsertUser(func: "eq(email, \"user_a29@company1.io\")",input: {
+    uid: "uid(v)",
+    name: "test",
+    email: "user_a29@company1.io",
+    dgraph_type: "Person"
+  }) {
+    id @var(val:"v")
+    name
+    email
+  }
+}
+```
