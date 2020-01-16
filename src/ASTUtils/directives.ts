@@ -53,6 +53,7 @@ export default (fieldNode: any) => {
 		const { directives, name, level } = directive;
 
 		const isFacet = directives.filter((e: any) => e.name.value === 'facets')[0];
+		const isVal = directives.filter((e: any) => e.name.value === 'var')[0];
 
 		switch (true) {
 			case !!isFacet: // Case isFacet isn't false
@@ -66,6 +67,13 @@ export default (fieldNode: any) => {
 					name
 				});
 
+				break;
+			case !!isVal:
+				listDirectives.push({
+					arguments: `${directives[0].arguments[0].value.value}`,
+					level,
+					name
+				});
 				break;
 			default:
 				console.log("Some error I think, don't you?");
