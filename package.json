@@ -1,6 +1,6 @@
 {
 	"name": "weasel-dgraph",
-	"version": "0.2.2",
+	"version": "0.2.8",
 	"description": "A direct GraphQL \"converter\" to Dgraph's `GraphQL+-` language.",
 	"main": "lib/index.js",
 	"type": "lib",

@@ -1,9 +1,11 @@
 directive @reverse on FIELD | FIELD_DEFINITION
 directive @filter(func: String) on FIELD | FIELD_DEFINITION
 directive @facets(aliases: String) on FIELD | FIELD_DEFINITION
+directive @var(val: String) on FIELD | FIELD_DEFINITION
 
 type Person {
-	id: String
+	id: String @var
+	email: String @reverse
 	name: String @facets
 	mobile: String
 	mobile_since: String @facets
@@ -45,7 +47,15 @@ input RDF {
 	payload: String
 }
 
+input upsertUserInput {
+	uid: String
+	name: String
+	email: String
+	dgraph_type: String
+}
+
 type Mutation {
 	addDataset(input: RDF): String
 	addPerson(input: [PersonInput]): String
+	upsertUser(func: String, type: String, input: upsertUserInput!): Person @filter
 }
