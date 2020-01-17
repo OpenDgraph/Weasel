@@ -195,9 +195,11 @@ mutation {
 
 Upsert Block using type and val (mandatory in case of upsert)
 
+> if you send an upsert mutation with root type "User" and the input type "Person". Both will be mutate.
+
 ```GraphQL
 mutation {
-  upsertUser(type: "\"User\"",input: {
+  upsertUser(type: "User",input: {
     uid: "uid(v)",
     name: "test",
     email: "user22@company1.io",
@@ -221,6 +223,22 @@ mutation {
     name: "test",
     email: "user_a29@company1.io",
     dgraph_type: "Person"
+  }) {
+    id @var(val:"v")
+    name
+    email
+  }
+}
+```
+
+If you send any upsert mutation without Type anywhere, it will assign `"dgraph.type":"unknown"`.
+
+```GraphQL
+mutation {
+  upsertUser(func: "eq(email, \"44user_88@company1.io\")",input: {
+    uid: "uid(v)",
+    name: "test",
+    email: "44user_88@company1.io"
   }) {
     id @var(val:"v")
     name

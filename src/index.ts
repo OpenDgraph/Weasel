@@ -22,21 +22,27 @@ export const extraction = (resolveInfo: any, args: any, context: any, reservedLi
 };
 
 export const mountUpsert = (args: any, query: any) => {
-	let a = JSON.stringify(args.input);
-	let b = JSON.stringify(query[0]);
+	const checkTypeinInput = args && 'dgraph_type' in args.input; //args.input.hasOwnProperty('dgraph_type');
+	const checkTypeRoot = 'type' in args;
 
-	const dtype = /dgraph.type/gim;
-	const last = /"}/gim;
-	const hasdtype = (theQuery: string) => (theQuery.match(dtype) ? true : false);
-	let checkdtype: boolean = hasdtype(a);
-
-	if ('type' in args && !checkdtype) {
-		'dgraph_type' in args.input ? null : (a = a.replace(last, `","dgraph.type":${args.type}}`));
+	if (checkTypeRoot) {
+		if (!checkTypeinInput) {
+			args.input['dgraph.type'] = `${args.type}`;
+		} else {
+			args.input['dgraph.type'] = [args.type, args.input.dgraph_type];
+		}
 	}
 
-	if ('type' in args === false && !checkdtype) {
-		'dgraph.type' in args.input ? null : (a = a.replace(last, `","dgraph.type": "unknown"}`));
+	if (checkTypeinInput) {
+		!checkTypeRoot ? (args.input['dgraph.type'] = args.input.dgraph_type) : null;
+	} else if (!checkTypeRoot) {
+		args.input['dgraph.type'] = 'unknown';
 	}
+
+	delete args.input['dgraph_type'];
+
+	let a: any = JSON.stringify(args.input);
+	let b: any = JSON.stringify(query[0]);
 
 	return `{"query": ${b},"set": ${a}}`;
 };
