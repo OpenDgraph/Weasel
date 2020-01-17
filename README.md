@@ -149,7 +149,7 @@ Using Dgraph's functions at query root.
 }
 ```
 
-Using Value Facets
+Using Value Facets.
 
 > Because GraphQL does not support names with special characters (Such as | pipe, . dot and so on that Dgraph supports). You are required to use aliases with Facets.
 
@@ -193,9 +193,9 @@ mutation {
 }
 ```
 
-Upsert Block using type and val (mandatory in case of upsert)
+Upsert Block using type and val (val graphl directive mandatory in case of upsert).
 
-> if you send an upsert mutation with root type "User" and the input type "Person". Both will be mutate.
+> if you send an upsert mutation with root type "User" and the input type "Person". Both will be mutate. E.g. `dgraph_type: ["Person","User"]`
 
 ```GraphQL
 mutation {
@@ -212,7 +212,7 @@ mutation {
 }
 ```
 
-Upsert Block not using type
+Upsert Block not using type function at root query.
 
 > The field "dgraph_type" will be converted to "dgraph.type".
 
@@ -231,7 +231,7 @@ mutation {
 }
 ```
 
-If you send any upsert mutation without Type anywhere, it will assign `"dgraph.type":"unknown"`.
+If you send any upsert mutation without Type anywhere (Root or input), it will assign `"dgraph.type":"unknown"`.
 
 ```GraphQL
 mutation {
