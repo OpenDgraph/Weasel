@@ -52,10 +52,7 @@ export const doUpsert = async (input: any, cleanBody: any) => {
 			mutation: input,
 			commitNow: true
 		});
-
-		const returnUid: any = Object.getOwnPropertyNames(res.data.uids);
-		const newQuery = await doQuery({ cleanBody }).then(res => res);
-		returnUid.length > 0 ? (localresp = newQuery) : (localresp = res.data.queries);
+		localresp = res.data.queries;
 	} catch (e) {
 		console.log(e);
 		await txn.discard();
