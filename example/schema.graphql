@@ -5,13 +5,13 @@ directive @var(val: String) on FIELD | FIELD_DEFINITION
 
 type Person {
 	id: String @var
-	email: String @reverse
+	email: String
 	name: String @facets
 	mobile: String
 	mobile_since: String @facets
 	car_since: String @facets
 	car: String
-	friend: [Person]
+	friend: [Person] @reverse
 }
 
 type Query {

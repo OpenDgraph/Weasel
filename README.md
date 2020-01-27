@@ -43,7 +43,7 @@ directive @filter(func: String) on FIELD | FIELD_DEFINITION
 ## At your resolvers code import the weasel
 
 ```JS
-import { extraction } from 'weasel-dgraph';
+import { extraction, mountUpsert } from 'weasel-dgraph';
 ```
 
 And
@@ -52,12 +52,12 @@ And
 export default {
   Query: {
     getObjects: async (parent, args, context, resolveInfo) => {
-      const queryConverted = extraction(resolveInfo, args, context, reservedList); // Here it will parse AST and convert to GraphQL+-
+      const queryConverted = extraction(resolveInfo, args); // Here it will parse AST and convert to GraphQL+-
       return getAll.Objects(args, queryConverted); // Here goes your resolving code to Dgraph (works with dgraph-js and dgraph-js-http).
     },
   Mutation: {
     CreateObject: async (_, args, context, resolveInfo) => {
-      const queryConverted = extraction(resolveInfo, args, context, reservedList);
+      const queryConverted = extraction(resolveInfo, args);
       const mutation = mutate.CreateObj(args.input); // you gonna use the graphql's input object to mutate in Dgraph.
       return get.Object(args, queryConverted, mutation.uid); // you have to return the UID from the mutation to do a query.
     }
@@ -67,43 +67,6 @@ export default {
 ```
 
 Todo mutations, you need to execute two Dgraph operations. One mutation and then one query. Due to GraphQL's nature of doing a query and returning what was mutated. Dgraph doesn't have this. So you need to do two operations.
-
-You will need to enter the special definitions of your Schema.
-
-e.g:
-
-```JS
-const reservedList = {
-  "reverse": [
-      'friend @reverse',
-      'liveAt @reverse',
-      'otherPred @reverse'
-  ]
-}
-```
-
-To know which predicates of your schema have a specific directive you need to query for:
-
-> You can check the Dgraph documentation for other directives.
-
-This code below is just an example of how to query Dgraph's Schema and how to filter schema to get only those predicates with the required directive. You can do it manually tho.
-
-```JS
-const { doQuery } = require('./utils/main.js');
-
-const q = `
-  schema {
-    reverse
-  }`;
-
-async function getShema() {
-  let sch = await doQuery({q});
-  let res = sch.schema.filter(e => e.reverse).map(e => `${e.predicate} @reverse`)
-  console.log(res);
-}
-
-getShema();
-```
 
 # Running GraphQL queries
 

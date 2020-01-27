@@ -1,24 +1,15 @@
-import iterate from './ASTUtils/iterate';
-import _treat from './ASTUtils/treatQuery';
 import treatRoot from './ASTUtils/treatRoot';
-import checkForDirectives from './ASTUtils/directives';
+import _iterate from './ASTUtils/iterate';
 
-export const extraction = (resolveInfo: any, args: any, context: any, reservedList: any) => {
+export const extraction = (resolveInfo: any, args: any) => {
 	const { fieldName, fieldNodes, returnType } = resolveInfo;
 	const fieldNode = fieldNodes[0];
 	const { directives: rootDirectives } = fieldNode;
 
 	const rootQuery = treatRoot(args, fieldName, rootDirectives);
-	const queryBody = iterate(fieldNode);
+	const testq = _iterate(fieldNode);
 
-	const listDirectives = checkForDirectives(fieldNode);
-
-	const query = _treat(args, queryBody, reservedList, listDirectives);
-
-	let exBody = `${rootQuery} ${query.exBody}`;
-	let cleanBody = `${rootQuery} ${query.cleanBody}`;
-
-	return [exBody, cleanBody];
+	return `${rootQuery} {\n ${testq} \n} \n}`;
 };
 
 export const mountUpsert = (args: any, query: any) => {
@@ -42,7 +33,7 @@ export const mountUpsert = (args: any, query: any) => {
 	delete args.input['dgraph_type'];
 
 	let a: any = JSON.stringify(args.input);
-	let b: any = JSON.stringify(query[0]);
+	let b: any = JSON.stringify(query);
 
 	return `{"query": ${b},"set": ${a}}`;
 };

@@ -1,16 +1,11 @@
 import { extraction, mountUpsert } from '../src';
 import { doQuery, doMutation, doUpsert } from './utils/main';
 
-const reservedList = {
-	reverse: ['friend @reverse']
-};
-
 export default {
 	Query: {
 		getAlice: async (parent: any, args: any, context: any, resolveInfo: any) => {
-			const query = extraction(resolveInfo, args, context, reservedList);
-			let dgraphQuery = query[0];
-			return await doQuery({ query: dgraphQuery }).then(res => {
+			const query = extraction(resolveInfo, args);
+			return await doQuery(query).then(res => {
 				return res.getAlice;
 			});
 		}
@@ -26,9 +21,9 @@ export default {
 			return false;
 		},
 		upsertUser: async (parent: any, args: any, context: any, resolveInfo: any) => {
-			const query: any = extraction(resolveInfo, args, context, reservedList);
+			const query: any = extraction(resolveInfo, args);
 			let upsert = mountUpsert(args, query);
-			return await doUpsert(upsert, query[1]).then((res: any) => {
+			return await doUpsert(upsert).then((res: any) => {
 				return res.upsertUser[0];
 			});
 		}

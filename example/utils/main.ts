@@ -11,11 +11,11 @@ function newClient(clientStub: any) {
 const DgraphClientStub = newClientStub();
 const dgraphClient = newClient(DgraphClientStub);
 
-export const doQuery = async (q: any) => {
+export const doQuery = async (query: any) => {
 	const txnq = dgraphClient.newTxn();
 	let localresp: any;
 	try {
-		const res = await txnq.query(!!q.query ? q.query : q.cleanBody);
+		const res = await txnq.query(query);
 		localresp = res.data;
 	} catch (e) {
 		console.log(e);
@@ -44,7 +44,7 @@ export const doMutation = async (input: any) => {
 	return localresp.code;
 };
 
-export const doUpsert = async (input: any, cleanBody: any) => {
+export const doUpsert = async (input: any) => {
 	const txn = dgraphClient.newTxn();
 	let localresp: any;
 	try {
