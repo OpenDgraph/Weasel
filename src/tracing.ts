@@ -17,7 +17,7 @@ export default function initTracer(serviceName: string) {
 	};
 	const options = {
 		tags: {
-			[serviceName + '.version']: '0.0.2'
+			[serviceName + '.version']: '0.3.4'
 		},
 		logger: {
 			info: function logInfo(msg: string) {

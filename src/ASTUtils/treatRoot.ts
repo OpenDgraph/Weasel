@@ -26,6 +26,7 @@ export default (
 			rootQuery = `func: ${args.func}`;
 			break;
 		default:
+			tracingManager.error(childSpan, new Error('Sorry, a root query is mandatory'));
 			throw console.error('Sorry, a root query is mandatory');
 	}
 

@@ -19,6 +19,11 @@ export class TracingManager {
     span.log(logObj);
   }
 
+  error(span: opentracing.Span, error: Error): void {
+    span.setTag(opentracing.Tags.ERROR, true);
+    span.log({ event: 'error', message: error.message, stack: error.stack });
+  }
+
   setTag(span: opentracing.Span, key: string, value: any): void {
     span.setTag(key, value);
   }
