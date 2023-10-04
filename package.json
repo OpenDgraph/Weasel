@@ -30,6 +30,7 @@
 		"typescript": "^5.2.2"
 	},
 	"dependencies": {
+		"dgraph-js-http": "^23.0.0-rc1",
 		"jaeger-client": "^3.19.0",
 		"opentracing": "^0.14.7"
 	}

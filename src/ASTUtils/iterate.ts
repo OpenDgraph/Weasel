@@ -18,7 +18,7 @@ const mapSelection = (e: any): Selection => ({
 
 let findpreds = (obj: any) => {
 	let predicates = obj
-		.filter((e: any) => !(e.directives.length > 0) && !e.selectionSet)
+		 .filter((e: any) => !(e.directives.length > 0) && !e.selectionSet)
 		.map((e: any) => ({
 			name: e.name.value === 'id' ? 'id : uid' : e.name.value
 		}));
@@ -29,32 +29,46 @@ let findpreds = (obj: any) => {
 	return query;
 };
 
-const findDirectives = (obj: Selection[]): string => {
-	let directives = obj
-		.filter((e: any) => e.directives.length > 0)
-		.filter((e: any) => e.directives[0].arguments.length > 0)
-		.map((e: any) =>
-			e.directives[0].name.value === 'var'
-				? {
-						name: `${e.directives[0].arguments[0].value.value} as ${
-							e.name.value === 'id' ? `id : uid` : e.name.value
-						}`
-				  }
-				: {
-						name: e.name.value,
-						directive: `@${e.directives[0].name.value}${
-							!!e.directives && !!e.directives[0].arguments[0]
-								? `(${e.directives[0].arguments[0].value.value})`
-								: ``
-						}`
-				  }
-		);
+const findDirectives = (obj: any[]): string => {
+	let directives1 = obj
+	.filter((e: any) => e.directives.length > 0)
+	  .filter((e: any) => e.directives[0]?.name.value === 'count')
+	  .map((e: any) => {
+		return {
+			name: 'count: count(uid)'
+		}
+	});
+
+	let directives2 = obj
+	  .filter((e: any) => e.directives.length > 0)
+	  .filter((e: any) => e.directives[0].arguments.length > 0)
+	  .map((e: any) => {
+		return e.directives[0].name.value === 'var'
+		  ? {
+			  name: `${e.directives[0].arguments[0].value.value} as ${
+				e.name.value === 'id' ? 'id : uid' : e.name.value
+			  }`
+			}
+		  : {
+			  name: e.name.value,
+			  directive: `@${e.directives[0].name.value}${
+				!!e.directives && !!e.directives[0].arguments[0]
+				  ? `(${e.directives[0].arguments[0].value.value})`
+				  : ``
+			  }`
+			};
+	  });
+
+	
 	let query = '';
-	for (let value of directives) {
-		query += `${value.name} ${!!value.directive ? value.directive : ``}\n`;
+	for (let value of directives1) {
+	  query += `${value.name}\n`;
 	}
+	for (let value of directives2) {
+		query += `${value.name} ${value.directive ? value.directive : ''}\n`;
+	  }
 	return query;
-};
+  };
 
 const findEdges = (obj: Selection[]): string => {
 	let edgesbe = obj
