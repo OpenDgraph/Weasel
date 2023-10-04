@@ -6,7 +6,15 @@ type DirectiveType = Array<{
 
 type FieldNameType = string;
 
-export default (args: ArgsType, fieldName: FieldNameType, rootDirectives: DirectiveType) => {
+export default (
+	args: ArgsType,
+	fieldName: FieldNameType,
+	rootDirectives: DirectiveType,
+	parentSpan: any,
+	tracingManager: any
+) => {
+	const childSpan = tracingManager.createSpan('treatRoot', parentSpan);
+
 	let filterArg: string | null = null;
 	let rootQuery = '';
 
@@ -18,6 +26,7 @@ export default (args: ArgsType, fieldName: FieldNameType, rootDirectives: Direct
 			rootQuery = `func: ${args.func}`;
 			break;
 		default:
+			tracingManager.error(childSpan, new Error('Sorry, a root query is mandatory'));
 			throw console.error('Sorry, a root query is mandatory');
 	}
 
@@ -29,7 +38,9 @@ export default (args: ArgsType, fieldName: FieldNameType, rootDirectives: Direct
 		);
 		filterArg = filterFunc ? filterFunc.value.value : null;
 	}
-
-	return `{
-			${fieldName}(${rootQuery}) ${filterArg ? `@filter(${filterArg})` : ''}`;
+	const final = `{
+		${fieldName}(${rootQuery}) ${filterArg ? `@filter(${filterArg})` : ''}`
+	tracingManager.log(childSpan, { event: 'root-query', value: final });
+	tracingManager.finishSpan(childSpan);
+	return final;
 };

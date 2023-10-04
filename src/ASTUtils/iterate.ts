@@ -16,19 +16,18 @@ const mapSelection = (e: any): Selection => ({
 	selectionSet: e.selectionSet
 });
 
-
 let findpreds = (obj: any) => {
-		let predicates = obj
-			.filter((e: any) => !(e.directives.length > 0) && !e.selectionSet)
-			.map((e: any) => ({
-				name: e.name.value === 'id' ? 'id : uid' : e.name.value
-			}));
-		let query = '';
-		for (let value of predicates) {
-			query += `${value.name}\n`;
-		}
-		return query;
-	};
+	let predicates = obj
+		.filter((e: any) => !(e.directives.length > 0) && !e.selectionSet)
+		.map((e: any) => ({
+			name: e.name.value === 'id' ? 'id : uid' : e.name.value
+		}));
+	let query = '';
+	for (let value of predicates) {
+		query += `${value.name}\n`;
+	}
+	return query;
+};
 
 const findDirectives = (obj: Selection[]): string => {
 	let directives = obj
@@ -91,14 +90,22 @@ const findEdges = (obj: Selection[]): string => {
 	return query;
 };
 
-export default (AST_OBJ: any): string => {
+export default (AST_OBJ: any, parentSpan: any, tracingManager: any): string => {
+	const childSpan = tracingManager.createSpan('iterate body', parentSpan);
+
 	const traverseAST: Selection[] = AST_OBJ.selectionSet.selections.map(mapSelection);
 
-    const predicates = findpreds(traverseAST);
+	const predicates = findpreds(traverseAST);
 	const directives = findDirectives(traverseAST);
 	const edges = findEdges(traverseAST);
 
+	tracingManager.log(childSpan, { event: 'predicates', value: predicates });
+	tracingManager.log(childSpan, { event: 'directives', value: directives });
+	tracingManager.log(childSpan, { event: 'edges', value: edges });
+
 	const myQuery = [predicates, directives, edges].join('\n');
+
+	tracingManager.finishSpan(childSpan);
 
 	return myQuery;
 };
