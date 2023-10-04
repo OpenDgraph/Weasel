@@ -24,7 +24,7 @@
 	},
 	"homepage": "https://github.com/MichelDiz/Weasel#readme",
 	"devDependencies": {
-		"prettier": "1.19.1",
-		"typescript": "^3.7.5"
+		"prettier": "3.0.3",
+		"typescript": "^5.2.2"
 	}
 }

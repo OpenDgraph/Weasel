@@ -1,7 +1,7 @@
 import * as dgraph from 'dgraph-js-http';
 
 function newClientStub() {
-	return new dgraph.DgraphClientStub('http://localhost:8080', false);
+	return new dgraph.DgraphClientStub('http://localhost:8080');
 }
 
 function newClient(clientStub: any) {
