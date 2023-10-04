@@ -1,18 +1,13 @@
 import { extraction, mountUpsert } from '../../src/index';
-// import { doQuery, doMutation, doUpsert } from './utils/main';
-
 import { DgraphManager } from '../../src/DgraphManager.ts';
 
 const dgraphManager = new DgraphManager();
-// ou para um endereço específico
+
 // const dgraphManager = new DgraphManager('http://some-address:8080');
 
 export const doQuery = dgraphManager.doQuery.bind(dgraphManager);
 export const doMutation = dgraphManager.doMutation.bind(dgraphManager);
 export const doUpsert = dgraphManager.doUpsert.bind(dgraphManager);
-
-// Para mudar o endereço do clientStub:
-// dgraphManager.setClientStubAddress('http://new-address:8080');
 
 const queryFields = ['getAlice'];
 
