@@ -1,7 +1,6 @@
 /lib
 *.DS_Store
-*.vscode
-
+*tmp*
 # Logs
 logs
 *.log

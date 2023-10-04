@@ -1,15 +1,23 @@
 import treatRoot from './ASTUtils/treatRoot';
 import _iterate from './ASTUtils/iterate';
 
+const generateRootQuery = (args: any, fieldName: string, rootDirectives: any[]): string => {
+	return treatRoot(args, fieldName, rootDirectives);
+};
+
+const generateQueryBody = (fieldNode: any): string => {
+	return _iterate(fieldNode);
+};
+
 export const extraction = (resolveInfo: any, args: any) => {
 	const { fieldName, fieldNodes, returnType } = resolveInfo;
 	const fieldNode = fieldNodes[0];
 	const { directives: rootDirectives } = fieldNode;
 
-	const rootQuery = treatRoot(args, fieldName, rootDirectives);
-	const testq = _iterate(fieldNode);
+	const rootQuery = generateRootQuery(args, fieldName, rootDirectives);
+	const queryBody = generateQueryBody(fieldNode);
 
-	return `${rootQuery} {\n ${testq} \n} \n}`;
+	return `${rootQuery} {\n ${queryBody} \n} \n}`;
 };
 
 export const mountUpsert = (args: any, query: any) => {

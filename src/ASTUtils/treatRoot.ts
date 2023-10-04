@@ -1,7 +1,14 @@
-export default (args: any, fieldName: any, rootDirectives: any) => {
-	let filter: any;
-	let filterArg: any;
-	let rootQuery: any;
+type ArgsType = { type?: string; func?: string };
+type DirectiveType = Array<{
+	name: { value: string };
+	arguments: Array<{ name: { value: string }; value: { value: string } }>;
+}>;
+
+type FieldNameType = string;
+
+export default (args: ArgsType, fieldName: FieldNameType, rootDirectives: DirectiveType) => {
+	let filterArg: string | null = null;
+	let rootQuery = '';
 
 	switch (true) {
 		case 'type' in args:
@@ -11,15 +18,18 @@ export default (args: any, fieldName: any, rootDirectives: any) => {
 			rootQuery = `func: ${args.func}`;
 			break;
 		default:
-			console.log('Sorry, a root query is mandatory');
+			throw console.error('Sorry, a root query is mandatory');
 	}
 
-	filter = rootDirectives.filter((e: any) => e.name.value === 'filter')[0];
+	const filter = (rootDirectives as Array<any>).find(e => e.name.value === 'filter');
 
-	filter
-		? (filterArg = filter.arguments.filter((e: any) => e.name.value === 'func')[0].value.value)
-		: null;
+	if (filter) {
+		const filterFunc = filter.arguments.find(
+			(e: { name: { value: string } }) => e.name.value === 'func'
+		);
+		filterArg = filterFunc ? filterFunc.value.value : null;
+	}
 
 	return `{
-${fieldName}(${rootQuery}) ${filter ? `@filter(${filterArg})` : ``}`;
+			${fieldName}(${rootQuery}) ${filterArg ? `@filter(${filterArg})` : ''}`;
 };
