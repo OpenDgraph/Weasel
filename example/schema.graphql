@@ -1,4 +1,5 @@
 directive @reverse on FIELD | FIELD_DEFINITION
+directive @count on FIELD | FIELD_DEFINITION
 directive @filter(func: String) on FIELD | FIELD_DEFINITION
 directive @facets(aliases: String) on FIELD | FIELD_DEFINITION
 directive @var(val: String) on FIELD | FIELD_DEFINITION
@@ -15,6 +16,7 @@ type RootQuery {
 
 type Person {
 	id: String @var
+	count: Int
 	email: String
 	name: String @facets
 	mobile: String

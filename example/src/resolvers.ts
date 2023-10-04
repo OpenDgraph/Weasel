@@ -11,31 +11,38 @@ export const doUpsert = dgraphManager.doUpsert.bind(dgraphManager);
 
 const queryFields = ['getAlice'];
 
+const transformResult = (result: any, fieldName: string) => {
+  
+	const arrayData = result[fieldName];
+	const countObj = arrayData.find((e: any) => 'count' in e);
+	const countValue = countObj ? countObj.count : null;
+  
+	const updatedArray = arrayData
+	  .filter((e: any) => !('count' in e))
+	  .map((e: any) => (countValue !== null ? { ...e, count: countValue } : e));
+  
+	return  updatedArray ;
+  };
+  
+
 const generateQueryResolver = (fieldName: string) => {
 	return async (parent: any, args: any, context: any, resolveInfo: any) => {
-	  let _arg =context.fieldNodes[0].arguments[0]
-	  const query = extraction(context, _arg);
-	  const result = await doQuery(query);
-	  console.log("query", query);
-	  return result[fieldName];
+		let _arg = context.fieldNodes[0].arguments[0];
+		const query = extraction(context, _arg);
+		const result = await doQuery(query);
+		return transformResult(result, fieldName);
 	};
-  };
+};
 
 const RootQuery: any = {
 	query: (parent: any, args: any, context: any, resolveInfo: any) => {
-	  const queryResolvers: any = {};
-	  for (const fieldName of queryFields) {
-		queryResolvers[fieldName] = generateQueryResolver(fieldName);
-	  }
-	  return {
-		...queryResolvers,
-		parent,
-		args,
-		context,
-		resolveInfo
-	  };
+		const queryResolvers: any = {};
+		for (const fieldName of queryFields) {
+			queryResolvers[fieldName] = generateQueryResolver(fieldName);
+		}
+		return queryResolvers;
 	}
-  };
+};
 
 export default {
 	RootQuery,
