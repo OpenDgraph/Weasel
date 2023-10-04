@@ -1,23 +1,44 @@
 import treatRoot from './ASTUtils/treatRoot';
 import _iterate from './ASTUtils/iterate';
+import initTracer from './tracing';
+import { TracingManager } from './TracingManager';
+import * as opentracing from 'opentracing';
 
-const generateRootQuery = (args: any, fieldName: string, rootDirectives: any[]): string => {
-	return treatRoot(args, fieldName, rootDirectives);
+const tracer = initTracer('Weasel');
+
+const tracingManager = new TracingManager(tracer);
+
+// Criar um novo span
+const rootSpan = tracingManager.createSpan('start-service');
+
+const generateRootQuery = (args: any, fieldName: string, rootDirectives: any[], span: any): any[] => {
+	const childSpan = tracingManager.createSpan('generateRootQuery', span);
+
+	const response = treatRoot(args, fieldName, rootDirectives, childSpan, tracingManager);
+
+	tracingManager.finishSpan(childSpan);
+	return [response,childSpan];
 };
 
-const generateQueryBody = (fieldNode: any): string => {
-	return _iterate(fieldNode);
+const generateQueryBody = (fieldNode: any, span: any): string => {
+	const childSpan = tracingManager.createSpan('generateQueryBody', span);
+	const response =_iterate(fieldNode);
+	tracingManager.finishSpan(childSpan);
+	return response;
 };
 
 export const extraction = (resolveInfo: any, args: any) => {
+	const childSpan = tracingManager.createSpan('startExtraction', rootSpan);
+
 	const { fieldName, fieldNodes, returnType } = resolveInfo;
 	const fieldNode = fieldNodes[0];
 	const { directives: rootDirectives } = fieldNode;
 
-	const rootQuery = generateRootQuery(args, fieldName, rootDirectives);
-	const queryBody = generateQueryBody(fieldNode);
+	const rootQuery = generateRootQuery(args, fieldName, rootDirectives, childSpan);
+	const queryBody = generateQueryBody(fieldNode,rootQuery[1]);
+	tracingManager.finishSpan(childSpan);
 
-	return `${rootQuery} {\n ${queryBody} \n} \n}`;
+	return `${rootQuery[0]} {\n ${queryBody} \n} \n}`;
 };
 
 export const mountUpsert = (args: any, query: any) => {
@@ -45,3 +66,6 @@ export const mountUpsert = (args: any, query: any) => {
 
 	return `{"query": ${b},"set": ${a}}`;
 };
+
+// Finalizar o span
+tracingManager.finishSpan(rootSpan);
