@@ -3,6 +3,16 @@ directive @filter(func: String) on FIELD | FIELD_DEFINITION
 directive @facets(aliases: String) on FIELD | FIELD_DEFINITION
 directive @var(val: String) on FIELD | FIELD_DEFINITION
 
+schema {
+  query: RootQuery
+  mutation: Mutation
+}
+
+type RootQuery {
+    query: Query
+    custom: Custom
+}
+
 type Person {
 	id: String @var
 	email: String
@@ -16,6 +26,10 @@ type Person {
 
 type Query {
 	getAlice(func: String): [Person]
+}
+
+type Custom {
+	teste: String
 }
 
 input PersonInput {

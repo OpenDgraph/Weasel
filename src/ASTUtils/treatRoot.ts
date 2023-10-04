@@ -7,7 +7,7 @@ type DirectiveType = Array<{
 type FieldNameType = string;
 
 export default (
-	args: ArgsType,
+	args: any,
 	fieldName: FieldNameType,
 	rootDirectives: DirectiveType,
 	parentSpan: any,
@@ -19,11 +19,11 @@ export default (
 	let rootQuery = '';
 
 	switch (true) {
-		case 'type' in args:
-			rootQuery = `func: type(${args.type})`;
+		case args.name.value === 'type':
+			rootQuery = `func: type(${args.value.value})`;
 			break;
-		case 'func' in args:
-			rootQuery = `func: ${args.func}`;
+		case args.name.value === 'func':
+			rootQuery = `func: ${args.value.value}`;
 			break;
 		default:
 			tracingManager.error(childSpan, new Error('Sorry, a root query is mandatory'));
