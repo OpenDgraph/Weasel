@@ -1,4 +1,4 @@
-import { extraction, mountUpsert } from '../src';
+import { extraction, mountUpsert } from '../../src';
 import { doQuery, doMutation, doUpsert } from './utils/main';
 
 export default {

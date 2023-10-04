@@ -6,7 +6,7 @@
     "configurations": [
         {
             "type": "node-terminal",
-            "name": "Debug Current TS File (ts-node)",
+            "name": "Debug via example file (ts-node)",
             "request": "launch",
             "command": "ts-node -- ${workspaceFolder}/example/index.ts",
             "cwd": "${fileDirname}",
@@ -17,20 +17,6 @@
                 "${workspaceFolder}/node_modules/**/*.js",
     "${workspaceFolder}/example/node_modules/**/*.js"
             ],
-          },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Launch Program",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "sourceMaps": true,
-            "smartStep": true,
-            "internalConsoleOptions": "openOnSessionStart",
-            "program": "${workspaceFolder}/example/index.ts",
-            "preLaunchTask": "tsc: build - ${workspaceFolder}/example/tsconfig.json",
-            "outFiles": ["${workspaceFolder}/example/dist/**/*.js"]
-        }
+          }
     ]
 }
