@@ -11,19 +11,31 @@ export default (
 	fieldName: FieldNameType,
 	rootDirectives: DirectiveType,
 	parentSpan: any,
-	tracingManager: any
+	tracingManager: any,
+	cType: any[]
 ) => {
 	const childSpan = tracingManager.createSpan('treatRoot', parentSpan);
 
 	let filterArg: string | null = null;
 	let rootQuery = '';
+	let newStr = ''
+	let namerArgs = args?.name.value || null
+	let valueArgs = args?.value.value || null
+
+	if (cType && cType[1]) {
+		valueArgs = newStr
+		namerArgs = 'type'
+	}
 
 	switch (true) {
-		case args.name.value === 'type':
-			rootQuery = `func: type(${args.value.value})`;
+		case namerArgs === 'id':
+			rootQuery = `func: uid(${valueArgs})`;
 			break;
-		case args.name.value === 'func':
-			rootQuery = `func: ${args.value.value}`;
+		case namerArgs === 'type' || namerArgs === 'input':
+			rootQuery = `func: type(${cType[0]})`;
+			break;
+		case namerArgs === 'func':
+			rootQuery = `func: ${valueArgs}`;
 			break;
 		default:
 			tracingManager.error(childSpan, new Error('Sorry, a root query is mandatory'));

@@ -29,7 +29,7 @@ export class DgraphManager {
     let localresp: any;
     try {
       const res = await txn.mutate({
-        setNquads: unescape(input.payload),
+        setJson: input,
         commitNow: true,
       });
       localresp = res.data;
@@ -39,7 +39,7 @@ export class DgraphManager {
     } finally {
       await txn.discard();
     }
-    return localresp.code;
+    return localresp;
   }
 
   async doUpsert(input: any) {

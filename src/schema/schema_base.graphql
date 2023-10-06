@@ -1,0 +1,48 @@
+
+directive @reverse on FIELD | FIELD_DEFINITION
+directive @search(by: [DgraphIndex!]) on FIELD_DEFINITION
+directive @count on FIELD | FIELD_DEFINITION
+directive @filter(func: String) on FIELD | FIELD_DEFINITION
+directive @facets(aliases: String) on FIELD | FIELD_DEFINITION
+directive @var(val: String) on FIELD | FIELD_DEFINITION
+
+schema {
+  query: RootQuery
+  mutation: RootMutation
+}
+
+type RootQuery {
+    query: Query
+    custom: Custom
+}
+
+type RootMutation {
+	mutation: Mutation
+}
+
+type Custom {
+	teste: String
+}
+
+input PaginationInput {
+	offset: Int
+	limit: Int
+}
+
+enum DgraphIndex {
+	int
+	int64
+	float
+	bool
+	hash
+	exact
+	term
+	fulltext
+	trigram
+	regexp
+	year
+	month
+	day
+	hour
+	geo
+}
