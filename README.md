@@ -1,14 +1,42 @@
-# Weasel
+# Weasel (BETA)
 
-A direct GraphQL "converter" to Dgraph's `GraphQL+-` language.
+A direct GraphQL "converter" to Dgraph's `DQL` language.
 
-### What is Weasel?
+# UPDATE: Major Refactoring of Weasel: Transitioning from a Library to a Standalone Program
 
-Weasel is a direct GraphQL "converter" to Dgraph's `GraphQL+-` language. It is proof of a concept that we can directly relate to both languages.
+Hello everyone,
+
+I am excited to announce that Weasel is undergoing a significant transformation. What began as a library designed for embedded work will now stand as an independent program. My key objectives for this refactoring include:
+
+
+1. The ability to create multiple GraphQL APIs using the same database (Dgraph).
+   * The possibility to segregate parts of your GraphQL API across various endpoints.
+   * As the program is standalone, you can have numerous GraphQL APIs within the same context. Or even have pseudo-namespaces.
+2. Complete mirroring of all Dgraph GraphQL functions.
+3. Enhancements to several existing Dgraph GraphQL features.
+4. Addition of more advanced custom queries and mutations.
+5. Improved Authorization system.
+6. Introduction of various new features like property validation, both in queries and mutations.
+
+PS. You will be able to run both Weasel and Dgraph's GraphQL in parallel. With full backward compatibility.
+
+Moreover, the program will leverage my expertise to consolidate all these changes.
+
+One of the most significant changes will be the ability to send a schema consisting only of Types (similar to Dgraph), which will automatically generate all query and mutation resolvers(Like CRUD as Dgraph does). The previous Weasel's feature will continue to exist but improved.
+
+# Why This Change?
+
+The primary reason for this shift is simplicity. This is a terrain I've navigated before, and translating GraphQL to DQL is quite straightforward. With the power of TypeScript and the freedom that comes with being an independent program, we can achieve more and move faster.
+
+My goal is to tackle known issues and simplify others. Granted, the code on the backend will become exponentially more complex. However, being in JavaScript allows for greater control and potentially more contributors to assist in the development, given that the pool of JavaScript developers is larger than that of Golang.
+
+## What is Weasel?
+
+Weasel is a direct GraphQL "converter" to Dgraph's `DQL` language. It is proof of a concept that we can directly relate to both languages.
 
 This project is inspired by join-monster. And it uses the Graphql's AST Object to do it's "magic".
 
-# Before you try out
+# Before you try out (Please, ignore everything below. I will update this later. Everything is gonna change)
 
 This code is extremely embryonic and simple. There is a lot of work to do yet.
 BTW, help is welcome!
