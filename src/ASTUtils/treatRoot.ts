@@ -12,7 +12,7 @@ export default (
 	rootDirectives: DirectiveType,
 	parentSpan: any,
 	tracingManager: any,
-	checkTypeList?: string
+	cType: any[]
 ) => {
 	const childSpan = tracingManager.createSpan('treatRoot', parentSpan);
 
@@ -22,8 +22,7 @@ export default (
 	let namerArgs = args?.name.value || null
 	let valueArgs = args?.value.value || null
 
-	if (checkTypeList && checkTypeList.includes("]")) {
-		newStr = checkTypeList.replace("[", "").replace("]", "").replace(/\"/g, '')
+	if (cType && cType[1]) {
 		valueArgs = newStr
 		namerArgs = 'type'
 	}
@@ -32,8 +31,8 @@ export default (
 		case namerArgs === 'id':
 			rootQuery = `func: uid(${valueArgs})`;
 			break;
-		case namerArgs === 'type':
-			rootQuery = `func: type(${valueArgs})`;
+		case namerArgs === 'type' || namerArgs === 'input':
+			rootQuery = `func: type(${cType[0]})`;
 			break;
 		case namerArgs === 'func':
 			rootQuery = `func: ${valueArgs}`;

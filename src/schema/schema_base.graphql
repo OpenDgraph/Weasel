@@ -8,12 +8,16 @@ directive @var(val: String) on FIELD | FIELD_DEFINITION
 
 schema {
   query: RootQuery
-  mutation: Mutation
+  mutation: RootMutation
 }
 
 type RootQuery {
     query: Query
     custom: Custom
+}
+
+type RootMutation {
+	mutation: Mutation
 }
 
 type Custom {

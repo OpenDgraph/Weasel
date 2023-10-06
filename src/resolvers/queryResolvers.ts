@@ -20,17 +20,14 @@ const transformResult = (result: any, fieldName: string) => {
 export const generateQueryResolver = (fieldName: string) => {
 	return async (parent: any, args: any, context: any, resolveInfo: any) => {
 		let _arg = context.fieldNodes[0].arguments[0];
-		//console.log('args', _arg);
-		// console.log('context', JSON.stringify(context, null, 2));
 		console.log(JSON.stringify(context.returnType, null, 2));
-		const checkType = JSON.stringify(context.returnType);
+		let checkType = JSON.stringify(context.returnType);
 		const checkType2 = checkType.includes(']');
+		let cType = [checkType.replace("[", "").replace("]", "").replace(/\"/g, ''), checkType2]
 
-		const query = extraction(context, _arg, checkType);
+		const query = extraction(context, _arg, cType);
 		const result = await doQuery(query);
 
-		console.log('query', query);
-		console.log('result', transformResult(result, fieldName));
 		if (checkType2) {
 			return transformResult(result, fieldName);
 		} else return transformResult(result, fieldName)[0];

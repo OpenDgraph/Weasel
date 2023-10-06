@@ -1,5 +1,6 @@
 import { DgraphManager } from '../DgraphManager';
 import { generateQueryResolver } from './queryResolvers';
+import { generateMutationResolver } from './mutationResolvers';
 
 const dgraphManager = new DgraphManager();
 
@@ -9,8 +10,7 @@ export const doQuery = dgraphManager.doQuery.bind(dgraphManager);
 export const doMutation = dgraphManager.doMutation.bind(dgraphManager);
 export const doUpsert = dgraphManager.doUpsert.bind(dgraphManager);
 
-const resolvers = (fields:any ): any[] => {
-
+const resolvers = (fields: any): any[] => {
 	const queryFields = fields[0];
 	const mutationFields = fields[1];
 
@@ -23,29 +23,23 @@ const resolvers = (fields:any ): any[] => {
 			return queryResolvers;
 		}
 	};
-// console.log('RootQuery', JSON.stringify(RootQuery, null, 2));
-	return [{
-		RootQuery,
-		// Mutation: {
-		// 	addDataset: async (parent: any, args: any, context: any, resolveInfo: any) => {
-		// 		return await doMutation(args.input).then((res: any) => {
-		// 			return res;
-		// 		});
-		// 	},
-		// 	addPerson: async (parent: any, args: any, context: any, resolveInfo: any) => {
-		// 		console.log(args.input); // Create here your way to resolve this mutation
-		// 		return false;
-		// 	},
-		// 	upsertUser: async (parent: any, args: any, context: any, resolveInfo: any) => {
-		// 		const query: any = extraction(resolveInfo, args);
-		// 		let upsert = mountUpsert(args, query);
-		// 		return await doUpsert(upsert).then((res: any) => {
-		// 			return res.upsertUser[0];
-		// 		});
-		// 	}
-		// }
-	}]
 
-} 
+	const RootMutation: any = {
+		mutation: (parent: any, args: any, context: any, resolveInfo: any) => {
+			const mutationResolvers: any = {};
+			for (const fieldName of mutationFields) {
+				mutationResolvers[fieldName] = generateMutationResolver(fieldName);
+			}
+			return mutationResolvers;
+		}
+	};
+
+	return [
+		{
+			RootQuery,
+			RootMutation
+		}
+	];
+};
 
 export default resolvers;
