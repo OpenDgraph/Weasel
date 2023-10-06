@@ -6,16 +6,16 @@
     "configurations": [
         {
             "type": "node-terminal",
-            "name": "Debug via example file (ts-node)",
+            "name": "Debug via file (ts-node)",
             "request": "launch",
-            "command": "ts-node -- ${workspaceFolder}/example/index.ts",
+            "command": "ts-node -- ${workspaceFolder}/index.ts",
             "cwd": "${fileDirname}",
             "internalConsoleOptions": "openOnSessionStart",
             "skipFiles": [
                 "<node_internals>/**",
                 "<node_modules>/**",
                 "${workspaceFolder}/node_modules/**/*.js",
-    "${workspaceFolder}/example/node_modules/**/*.js"
+    "${workspaceFolder}/node_modules/**/*.js"
             ],
           }
     ]

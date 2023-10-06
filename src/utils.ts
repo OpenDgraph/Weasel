@@ -7,15 +7,10 @@ const tracer = initTracer('Weasel');
 
 const tracingManager = new TracingManager(tracer);
 
-const generateRootQuery = (
-	args: any,
-	fieldName: string,
-	rootDirectives: any[],
-	span: any
-): any => {
+const generateRootQuery = (args: any, fieldName: string, rootDirectives: any[], span: any, checkTypeList?:string): any => {
 	const childSpan = tracingManager.createSpan('generateRootQuery', span);
 
-	const response = treatRoot(args, fieldName, rootDirectives, childSpan, tracingManager);
+	const response = treatRoot(args, fieldName, rootDirectives, childSpan, tracingManager, checkTypeList);
 
 	tracingManager.finishSpan(childSpan);
 	return response;
@@ -28,14 +23,14 @@ const generateQueryBody = (fieldNode: any, span: any): string => {
 	return response;
 };
 
-export const extraction = (resolveInfo: any, args: any) => {
+export const extraction = (resolveInfo: any, args: any, checkTypeList?: string) => {
 	const childSpan = tracingManager.createSpan('startExtraction');
 
 	const { fieldName, fieldNodes, returnType } = resolveInfo;
 	const fieldNode = fieldNodes[0];
 	const { directives: rootDirectives } = fieldNode;
 
-	const rootQuery = generateRootQuery(args, fieldName, rootDirectives, childSpan);
+	const rootQuery = generateRootQuery(args, fieldName, rootDirectives, childSpan, checkTypeList);
 	const queryBody = generateQueryBody(fieldNode, childSpan);
 	tracingManager.finishSpan(childSpan);
 

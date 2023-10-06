@@ -1,0 +1,49 @@
+type User {
+	title: String @search(by: [term])
+	friends: [User!] @hasInverse(field: friends)
+	teste1: [User]! @hasInverse(field: teste1)
+	teste2: [User] @hasInverse(field: teste2)
+	teste3: [User!]! @hasInverse(field: teste3)
+	teste4: [User] @hasInverse(field: teste4)
+	teste5: User! @hasInverse(field: teste5)
+	teste6: User @hasInverse(field: teste6)
+	id: ID!
+	name: String!
+	messages: [Message]
+}
+
+type Person {
+	id: String @var
+	count: Int
+	email: String
+	name: String @facets
+	mobile: String
+	mobile_since: String @facets
+	car_since: String @facets
+	car: String
+	friend: [Person] @reverse
+}
+
+type Query {
+	hello: String
+}
+
+type Message {
+	id: ID!
+	content: String!
+	sender: User! @hasInverse(field: messages)
+}
+
+type Post {
+	id: ID!
+	title: String!
+	body: String
+	author: User!
+}
+
+enum UserRole {
+	ADMIN
+	USER
+	GUEST
+}
+
