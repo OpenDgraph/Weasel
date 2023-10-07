@@ -7,7 +7,7 @@
 		"build": "rm -Rf lib && tsc --pretty -p . ",
 		"start": "nodemon --exec ts-node index.ts",
 		"buildAndRun": "nodemon --exec tsc -p .",
-		"test": "jest"
+		"test": "NODE_ENV=test jest --detectOpenHandles"
 	},
 	"repository": {
 		"type": "git",
