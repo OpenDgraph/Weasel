@@ -185,7 +185,6 @@ const schemaDefinition = (): any => {
 		const mutationFields = mutationType?.getFields();
 		
 		mutationNames = [
-			
 			...Object.keys(mutationFields||{}),
 			...getObjectKeys(AddMutation),
 			...getObjectKeys(UpdateMutation),
