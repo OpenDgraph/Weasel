@@ -52,4 +52,30 @@ describe('Queries', () => {
 		expect(data.query.queryUsers[0]).toHaveProperty('id');
 		expect(data.query.queryUsers[0]).toHaveProperty('title');
 	}, 3000);
+	it('should getUser', async () => {
+		const { data } = await client.query({
+			query: gql`
+				{
+					getQuery {
+						getUser(id: "0x1") {
+							id
+							title
+						}
+					}
+					test: getQuery {
+						getUser(id: "0x2") {
+							id
+							title
+						}
+					}
+				}
+			`
+		});
+
+		expect(data).toHaveProperty('getQuery');
+		expect(data.getQuery).toHaveProperty('getUser');
+		expect(data.getQuery.getUser).toEqual(expect.any(Object));
+		expect(data.getQuery.getUser).toHaveProperty('id');
+		expect(data.getQuery.getUser).toHaveProperty('title');
+	}, 3000);
 });
