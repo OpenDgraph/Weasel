@@ -1,0 +1,20 @@
+version: '3'
+services:
+  app:
+    build: .
+    depends_on:
+      - dgraph-alpha
+  dgraph-zero:
+    image: dgraph/dgraph:latest
+    ports:
+      - "5080:5080"
+    command: dgraph zero
+
+  dgraph-alpha:
+    image: dgraph/dgraph:latest
+    ports:
+      - "8080:8080"
+      - "9080:9080"
+    command: dgraph alpha --zero dgraph-zero:5080 --security "whitelist=0.0.0.0/0"
+    depends_on:
+      - dgraph-zero
