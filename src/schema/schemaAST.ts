@@ -1,14 +1,16 @@
-import { gql } from 'apollo-server-express';
 import { parse, validateSchema, buildSchema } from 'graphql';
 import fs from 'fs';
-import {} from 'graphql';
 
 const schemaString = fs.readFileSync(__dirname.concat('/schema.graphql'), 'utf8');
 const baseSchema = fs.readFileSync(__dirname.concat('/schema_base.graphql'), 'utf8');
 const parsedSchema = parse(schemaString);
 
-let globalQueries = '';
-let globalMutations = '';
+let globalQueriesSingular = '';
+let globalQueriesplural = '';
+let addGlobalMutations = '';
+let updateGlobalMutations = '';
+let deleteGlobalMutations = '';
+
 const scalarTypes = ['String', 'Int', 'Float', 'Boolean', 'ID'];
 
 const generateEnumDefinition = (definition: any) => {
@@ -84,17 +86,17 @@ const generateOperationsFromAST = (astNode: any): string => {
 	const typeName = astNode.name.value;
 	const inputTypeName = `${typeName}Input`;
 
-	const singular = 'query' + typeName;
+	const singular = 'get' + typeName;
 	const plural = 'query' + typeName + 's';
 
 	// Gerar Query Types
-	globalQueries += `  ${singular}(id: ID!): ${typeName}\n`;
-	globalQueries += `  ${plural}: [${typeName}]\n`;
+	globalQueriesSingular += `  ${singular}(id: ID!): ${typeName}\n`;
+	globalQueriesplural += `  ${plural}: [${typeName}]\n`;
 
 	// Gerar Mutation Types
-	globalMutations += `  add${typeName}(input: ${inputTypeName}): ${typeName}\n`;
-	globalMutations += `  update${typeName}(id: ID!, input: ${inputTypeName}): ${typeName}\n`;
-	globalMutations += `  remove${typeName}(id: ID!): ${typeName}\n`;
+	addGlobalMutations += `  add${typeName}(input: ${inputTypeName}): ${typeName}\n`;
+	updateGlobalMutations += `  update${typeName}(id: ID!, input: ${inputTypeName}): ${typeName}\n`;
+	deleteGlobalMutations += `  delete${typeName}(id: ID!): ${typeName}\n`;
 
 	return '';
 };
@@ -132,15 +134,23 @@ const reconstructGraphQLSchema = (definitions: any) => {
 				break;
 		}
 	});
-	schema += `type Query {\n${globalQueries}}\n\n`;
-	schema += `type Mutation {\n${globalMutations}}\n\n`;
+	schema += `type Aggregate {\n aggregateOn: String \n}\n\n`;
+	schema += `type Get {\n${globalQueriesSingular}}\n\n`;
+	schema += `type Query {\n${globalQueriesplural}}\n\n`;
+	schema += `type AddMutation {\n${addGlobalMutations}}\n\n`;
+	schema += `type UpdateMutation {\n${updateGlobalMutations}}\n\n`;
+	schema += `type DeleteMutation {\n${deleteGlobalMutations}}\n\n`;
 	return schema;
 };
 
 const reconstructedSchema = reconstructGraphQLSchema(parsedSchema.definitions);
 
+function getObjectKeys(obj: { [key: string]: any }): string[] {
+	return Object.keys(obj);
+}
+
 const schemaDefinition = (): any => {
-	//console.log(reconstructedSchema);
+	// console.log(reconstructedSchema);
 	const mySchema = buildSchema(reconstructedSchema);
 
 	const errors = validateSchema(mySchema);
@@ -148,24 +158,40 @@ const schemaDefinition = (): any => {
 		console.error(errors);
 	} else {
 		const queryType = mySchema.getQueryType();
-        const mutationType = mySchema.getMutationType();
+		const mutationType = mySchema.getMutationType();
 		let queryNames = {};
 		let mutationNames = {};
 
-		if (queryType) {
-			const queryFields = queryType.getFields();
-			queryNames = Object.keys(queryFields);
-			// console.log('Query fields:', queryNames);
-		} else {
-			console.error('No query type defined in the schema.');
-		}
-		if (mutationType) {
-			const mutationFields = mutationType.getFields();
-			mutationNames = Object.keys(mutationFields);
-            // console.log('mutationNames fields:', mutationNames);
-		} else {
-			console.error('No mutation type defined in the schema.');
-		}
+		// @ts-ignore: Object is possibly 'null'.
+		const Get = mySchema.getTypeMap().Get._fields;
+		// @ts-ignore: Object is possibly 'null'.
+		const Aggregate = mySchema.getTypeMap().Aggregate._fields;
+		// @ts-ignore: Object is possibly 'null'.
+		const queryFields = queryType.getFields();
+
+		queryNames = [
+			...getObjectKeys(Get),
+			...getObjectKeys(Aggregate),
+			...Object.keys(queryFields)
+		];
+
+		// @ts-ignore: Object is possibly 'null'.
+		const AddMutation = mySchema.getTypeMap().AddMutation._fields;
+		// @ts-ignore: Object is possibly 'null'.
+		const UpdateMutation = mySchema.getTypeMap().UpdateMutation._fields;
+		// @ts-ignore: Object is possibly 'null'.
+		const DeleteMutation = mySchema.getTypeMap().DeleteMutation._fields;
+		// @ts-ignore: Object is possibly 'null'.
+		const mutationFields = mutationType?.getFields();
+		
+		mutationNames = [
+			
+			...Object.keys(mutationFields||{}),
+			...getObjectKeys(AddMutation),
+			...getObjectKeys(UpdateMutation),
+			...getObjectKeys(DeleteMutation)
+		];
+
 		return [`${baseSchema} ${reconstructedSchema}`, [queryNames, mutationNames]];
 	}
 };

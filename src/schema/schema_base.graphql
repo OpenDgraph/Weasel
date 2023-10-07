@@ -12,12 +12,16 @@ schema {
 }
 
 type RootQuery {
-    query: Query
+    getQuery: Get
+	query: Query
+	aggregate: Aggregate
     custom: Custom
 }
 
 type RootMutation {
-	mutation: Mutation
+	add: AddMutation
+	delete: DeleteMutation
+	update: UpdateMutation
 }
 
 type Custom {
