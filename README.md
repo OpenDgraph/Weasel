@@ -30,6 +30,11 @@ The primary reason for this shift is simplicity. This is a terrain I've navigate
 
 My goal is to tackle known issues and simplify others. Granted, the code on the backend will become exponentially more complex. However, being in JavaScript allows for greater control and potentially more contributors to assist in the development, given that the pool of JavaScript developers is larger than that of Golang.
 
+### Better Organization
+First how it is in Dgraph.  | | And How it will be in Weasel.
+
+<img src="./assets/53.png" width="200"> <img src="./assets/54.png" width="250">
+
 ## What is Weasel?
 
 Weasel is a direct GraphQL "converter" to Dgraph's `DQL` language. It is proof of a concept that we can directly relate to both languages.
