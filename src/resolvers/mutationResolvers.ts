@@ -2,7 +2,15 @@ import { DgraphManager } from '../DgraphManager';
 import { mountUpsert, mountMutation } from '../utils';
 import { extraction } from '../utils';
 
-const dgraphManager = new DgraphManager();
+let dgraphManager = null;
+
+if (process.env.RUNNING_JEST === 'true' || process.env.NODE_ENV === 'test') {
+	dgraphManager = new DgraphManager('http://dgraph-alpha:8080');
+	console.log('Running in Docker');
+} else {
+	dgraphManager = new DgraphManager();
+}
+
 
 const doUpsert = dgraphManager.doUpsert.bind(dgraphManager);
 const doQuery = dgraphManager.doQuery.bind(dgraphManager);

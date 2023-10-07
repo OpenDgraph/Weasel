@@ -1,8 +1,6 @@
 import { generateQueryResolver } from './queryResolvers';
 import { generateMutationResolver } from './mutationResolvers';
 
-// const dgraphManager = new DgraphManager('http://some-address:8080');
-
 const resolvers = (fields: any): any[] => {
 	const queryFields = fields[0];
 	const mutationFields = fields[1];
