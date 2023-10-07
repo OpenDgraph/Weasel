@@ -1,4 +1,3 @@
-
 directive @reverse on FIELD | FIELD_DEFINITION
 directive @search(by: [DgraphIndex!]) on FIELD_DEFINITION
 directive @count on FIELD | FIELD_DEFINITION
@@ -7,17 +6,21 @@ directive @facets(aliases: String) on FIELD | FIELD_DEFINITION
 directive @var(val: String) on FIELD | FIELD_DEFINITION
 
 schema {
-  query: RootQuery
-  mutation: RootMutation
+	query: RootQuery
+	mutation: RootMutation
 }
 
 type RootQuery {
-    query: Query
-    custom: Custom
+	getQuery: Get
+	query: Query
+	aggregate: Aggregate
+	custom: Custom
 }
 
 type RootMutation {
-	mutation: Mutation
+	add: AddMutation
+	delete: DeleteMutation
+	update: UpdateMutation
 }
 
 type Custom {
