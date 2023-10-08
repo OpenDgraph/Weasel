@@ -11,7 +11,7 @@ services:
       - dgraph-alpha
   test-api:
     build: .
-    command: yarn test
+    command: /bin/sh -c "sleep 10 && yarn test"
     depends_on:
       - app
     environment:

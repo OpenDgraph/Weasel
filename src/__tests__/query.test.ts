@@ -32,7 +32,7 @@ describe('Mutations', () => {
 		expect(data.add).toHaveProperty('addUser');
 		expect(data.add.addUser).toEqual(expect.any(Object));
 		expect(data.add.addUser).toHaveProperty('id');
-		expect(data.add.addUser).toHaveProperty('titleMAKEITFAIL');
+		expect(data.add.addUser).toHaveProperty('title');
 	}, 3000);
 });
 
