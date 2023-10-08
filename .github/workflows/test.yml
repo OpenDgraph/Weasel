@@ -18,5 +18,7 @@ jobs:
     - name: Setup Docker Compose
       run: docker-compose -f docker-compose.test.yml build
 
-    - name: Run Tests
-      run: docker-compose -f docker-compose.test.yml run app
+    - name: Run and Monitor Tests
+      run: |
+        docker-compose -f docker-compose.test.yml up -d
+        docker-compose -f docker-compose.test.yml logs -f app | (grep -m 1 "exited with code 0" && docker-compose -f docker-compose.test.yml down)
