@@ -81,6 +81,6 @@ describe('Queries', () => {
 		expect(data.getQuery).toHaveProperty('getUser');
 		expect(data.getQuery.getUser).toEqual(expect.any(Object));
 		expect(data.getQuery.getUser).toHaveProperty('id');
-		expect(data.getQuery.getUser).toHaveProperty('title-makeitFailAgain');
+		expect(data.getQuery.getUser).toHaveProperty('title');
 	}, 3000);
 });
