@@ -7,8 +7,9 @@
 		"build": "rm -Rf lib && tsc --pretty -p . ",
 		"start": "nodemon --exec ts-node index.ts",
 		"buildAndRun": "nodemon --exec tsc -p .",
-		"test": "NODE_ENV=test jest --detectOpenHandles",
-		"local:test": "NODE_ENV=local_test jest --detectOpenHandles"
+		"startTestServer": "NODE_ENV=test nodemon --exec ts-node index.ts",
+		"test": "NODE_ENV=test jest",
+		"local:test": "NODE_ENV=local_test jest"
 	},
 	"repository": {
 		"type": "git",

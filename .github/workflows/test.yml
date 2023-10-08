@@ -18,5 +18,6 @@ jobs:
     - name: Setup Docker Compose
       run: docker-compose -f docker-compose.test.yml build
 
-    - name: Run Tests
-      run: docker-compose -f docker-compose.test.yml run app
+    - name: Start services
+      run: docker-compose -f docker-compose.test.yml up --exit-code-from test-api --abort-on-container-exit
+

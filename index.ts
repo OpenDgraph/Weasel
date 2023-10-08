@@ -14,7 +14,7 @@ const _resolvers = resolvers(defs[1])[0];
 
 const server = new ApolloServer({ typeDefs, resolvers: _resolvers });
 
-export async function startServer() {
+async function startServer() {
 	await server.start();
 	server.applyMiddleware({ app, cors: false });
 	const port = 4001;
@@ -25,5 +25,4 @@ export async function startServer() {
 	});
 }
 
-// TODO: Fix this later
-// startServer().catch(err => console.error(err));
+startServer().catch(err => console.error(err));
