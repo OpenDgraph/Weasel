@@ -2,10 +2,20 @@ version: '3'
 services:
   app:
     build: .
+    ports:
+      - "4001:4001"
+    command: yarn startTestServer
+    environment:
+      - RUNNING_JEST=true
     depends_on:
       - dgraph-alpha
+  test-api:
+    build: .
+    command: yarn test
+    depends_on:
+      - app
     environment:
-    - RUNNING_JEST=true
+      - RUNNING_JEST=true
   dgraph-zero:
     image: dgraph/dgraph:latest
     ports:

@@ -1,13 +1,18 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 
+let uri: string;
+
+if (process.env.RUNNING_JEST === 'true' || process.env.NODE_ENV === 'test') {
+	uri = 'http://app:4001/graphql';
+} else {
+	uri = 'http://localhost:4001/graphql';
+}
+
 const client = new ApolloClient({
-	uri: 'http://localhost:4001/graphql',
+	uri: uri,
 	cache: new InMemoryCache()
 });
 
-// beforeAll(async () => {
-//     await sleep(30000);
-// }, 30000);
 describe('Mutations', () => {
 	it('should add User', async () => {
 		const { data } = await client.mutate({
@@ -27,7 +32,7 @@ describe('Mutations', () => {
 		expect(data.add).toHaveProperty('addUser');
 		expect(data.add.addUser).toEqual(expect.any(Object));
 		expect(data.add.addUser).toHaveProperty('id');
-		expect(data.add.addUser).toHaveProperty('title');
+		expect(data.add.addUser).toHaveProperty('titleMAKEITFAIL');
 	}, 3000);
 });
 
