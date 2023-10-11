@@ -9,6 +9,7 @@ services:
       - RUNNING_JEST=true
     depends_on:
       - dgraph-alpha
+      - redis
   test-api:
     build: .
     command: /bin/sh -c "sleep 10 && yarn test"
