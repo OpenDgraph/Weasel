@@ -4,6 +4,7 @@ services:
     build: .
     ports:
       - "4001:4001"
+      - "4004:4004"
     command: yarn startTestServer
     environment:
       - RUNNING_JEST=true
