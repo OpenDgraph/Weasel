@@ -23,7 +23,7 @@ export class RedisStore {
 	constructor(initialState: State, StoreType: any) {
 		this.state = initialState;
         this.sType = StoreType;
-		this.redis = new Redis({host: 'redis', port: 6379});
+		this.redis = new Redis({host: uri, port: 6379});
 	}
 
 	getState = async (): Promise<State> => {

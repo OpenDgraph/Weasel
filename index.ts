@@ -7,13 +7,13 @@ import resolvers from './src/resolvers/index.ts';
 import schemaDefinition from './src/schema/schemaAST.ts';
 import schemaStore from './src/stores/schemaStore.ts';
 
-let server: ApolloServer;
+let server: any;
 
 const app = express();
 app.use(express.json());
 
 app.post('/update-schema', async (req, res) => {
-	const newSchemaString = req.body.schema;
+	let newSchemaString = req.body.schema;
 
 	if (!newSchemaString) {
 		return res.status(400).send('No Schema provided');
@@ -29,19 +29,20 @@ app.post('/update-schema', async (req, res) => {
 		process.env.NODE_ENV === 'test' ||
 		process.env.NODE_ENV === 'debug'
 	) {
-		const schemaString = fs.readFileSync(
+		newSchemaString = fs.readFileSync(
 			__dirname.concat('/src/schema/schema.graphql'),
 			'utf8'
 		);
-		await schemaStore.setState({ state: schemaString });
-		return res.send({ status: 'success Test mode' });
 	}
 
 	await schemaStore.setState({ state: newSchemaString });
 
-	if (server) {
-		await server.stop();
-	}
+	// TODO: This is not working
+	// the issue is that I don't know how to reload the schema
+	// if (server) {
+	// 	await server.stop();
+	// 	server = null;
+	// }
 
 	try {
 		server = await startServer();

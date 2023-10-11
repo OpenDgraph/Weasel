@@ -1,4 +1,5 @@
 type User {
+	age: Int
 	title: String @search(by: [term])
 	friends: [User!] @hasInverse(field: friends)
 	teste1: [User]! @hasInverse(field: teste1)

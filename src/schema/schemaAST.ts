@@ -4,11 +4,11 @@ import schemaStore from '../stores/schemaStore.ts';
 
 const baseSchema = fs.readFileSync(__dirname.concat('/schema_base.graphql'), 'utf8');
 
-let globalQueriesSingular = '';
-let globalQueriesplural = '';
-let addGlobalMutations = '';
-let updateGlobalMutations = '';
-let deleteGlobalMutations = '';
+const globalQueriesSingular = new Set<string>();
+const globalQueriesplural = new Set<string>();
+const addGlobalMutations = new Set<string>();
+const updateGlobalMutations = new Set<string>();
+const deleteGlobalMutations = new Set<string>();
 
 const scalarTypes = ['String', 'Int', 'Float', 'Boolean', 'ID'];
 
@@ -89,13 +89,13 @@ const generateOperationsFromAST = (astNode: any): string => {
 	const plural = 'query' + typeName + 's';
 
 	// Gerar Query Types
-	globalQueriesSingular += `  ${singular}(id: ID!): ${typeName}\n`;
-	globalQueriesplural += `  ${plural}: [${typeName}]\n`;
+	globalQueriesSingular.add(`${singular}(id: ID!): ${typeName}\n`);
+	globalQueriesplural.add(`${plural}: [${typeName}]\n`);
 
 	// Gerar Mutation Types
-	addGlobalMutations += `  add${typeName}(input: ${inputTypeName}): ${typeName}\n`;
-	updateGlobalMutations += `  update${typeName}(id: ID!, input: ${inputTypeName}): ${typeName}\n`;
-	deleteGlobalMutations += `  delete${typeName}(id: ID!): ${typeName}\n`;
+	addGlobalMutations.add(`add${typeName}(input: ${inputTypeName}): ${typeName}\n`);
+	updateGlobalMutations.add(`update${typeName}(id: ID!, input: ${inputTypeName}): ${typeName}\n`);
+	deleteGlobalMutations .add(`delete${typeName}(id: ID!): ${typeName}\n`);
 
 	return '';
 };
@@ -134,23 +134,24 @@ const reconstructGraphQLSchema = (definitions: any) => {
 		}
 	});
 	schema += `type Aggregate {\n aggregateOn: String \n}\n\n`;
-	schema += `type Get {\n${globalQueriesSingular}}\n\n`;
-	schema += `type Query {\n${globalQueriesplural}}\n\n`;
-	schema += `type AddMutation {\n${addGlobalMutations}}\n\n`;
-	schema += `type UpdateMutation {\n${updateGlobalMutations}}\n\n`;
-	schema += `type DeleteMutation {\n${deleteGlobalMutations}}\n\n`;
+	schema += `type Get {\n${Array.from(globalQueriesSingular).join('\n')}}\n\n`;
+	schema += `type Query {\n${Array.from(globalQueriesplural).join('\n')}}\n\n`;
+	schema += `type AddMutation {\n${Array.from(addGlobalMutations).join('\n')}}\n\n`;
+	schema += `type UpdateMutation {\n${Array.from(updateGlobalMutations).join('\n')}}\n\n`;
+	schema += `type DeleteMutation {\n${Array.from(deleteGlobalMutations).join('\n')}}\n\n`;
 	return schema;
 };
-
 
 function getObjectKeys(obj: { [key: string]: any }): string[] {
 	return Object.keys(obj);
 }
 
 const schemaDefinition = async (): Promise<any> => {
-	const schemaString = await schemaStore.getState();
-    const parsedSchema = parse(String.raw`${schemaString.state}`);
+	let schemaString = await schemaStore.getState();
+	const rawSchema = String.raw`${schemaString.state}`;
+	const parsedSchema = parse(rawSchema);
 	const reconstructedSchema = reconstructGraphQLSchema(parsedSchema.definitions);
+	console.log('reconstructedSchema', reconstructedSchema);
 	const mySchema = buildSchema(reconstructedSchema);
 
 	const errors = validateSchema(mySchema);
@@ -183,9 +184,9 @@ const schemaDefinition = async (): Promise<any> => {
 		const DeleteMutation = mySchema.getTypeMap().DeleteMutation._fields;
 		// @ts-ignore: Object is possibly 'null'.
 		const mutationFields = mutationType?.getFields();
-		
+
 		mutationNames = [
-			...Object.keys(mutationFields||{}),
+			...Object.keys(mutationFields || {}),
 			...getObjectKeys(AddMutation),
 			...getObjectKeys(UpdateMutation),
 			...getObjectKeys(DeleteMutation)
