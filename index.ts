@@ -7,7 +7,10 @@ import resolvers from './src/resolvers/index.ts';
 import schemaDefinition from './src/schema/schemaAST.ts';
 import schemaStore from './src/stores/schemaStore.ts';
 
-let server: any;
+import http from 'http';
+
+let apolloServer: any;
+let httpServer: any;
 
 const app = express();
 app.use(express.json());
@@ -29,49 +32,42 @@ app.post('/update-schema', async (req, res) => {
 		process.env.NODE_ENV === 'test' ||
 		process.env.NODE_ENV === 'debug'
 	) {
-		newSchemaString = fs.readFileSync(
-			__dirname.concat('/src/schema/schema.graphql'),
-			'utf8'
-		);
+		newSchemaString = fs.readFileSync(__dirname.concat('/src/schema/schema.graphql'), 'utf8');
 	}
+	httpServer?.close();
+	httpServer.removeAllListeners('request');
 
 	await schemaStore.setState({ state: newSchemaString });
 
-	// TODO: This is not working
-	// the issue is that I don't know how to reload the schema
-	// if (server) {
-	// 	await server.stop();
-	// 	server = null;
-	// }
-
-	try {
-		server = await startServer();
-	} catch (error) {
-		console.error('Failed to restart the server', error);
-		return res.status(500).send('Failed to restart the server');
-	}
+	await startServer();
 
 	res.send({ status: 'success' });
 });
 
 async function startServer() {
+	const app2 = express();
+
 	const defs = await schemaDefinition();
 	const typeDefs = gql`
 		${defs[0]}
 	`;
 	const _resolvers = resolvers(defs[1])[0];
 
-	server = new ApolloServer({ typeDefs, resolvers: _resolvers });
-	await server.start();
-	server.applyMiddleware({ app, cors: false });
+	apolloServer = new ApolloServer({ typeDefs, resolvers: _resolvers });
+	await apolloServer.start();
 
-	return server;
+	apolloServer.applyMiddleware({ app: app2, cors: false, path: '/graphql' });
+
+	httpServer = http.createServer(app2);
+	httpServer.listen(4004, () => {
+		console.log(`🚀 Server ready at http://localhost:4004${apolloServer.graphqlPath}`);
+	});
 }
 
 const port = 4001;
 app.listen(port, () => {
 	console.log(`🚀 Server ready at http://localhost:${port}`),
-		console.log('Use postman to test the API');
+	console.log('Use postman to test the API');
 });
 
 startServer().catch(err => console.error(err));
