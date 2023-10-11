@@ -8,7 +8,7 @@
             "type": "node-terminal",
             "name": "Debug via file (ts-node)",
             "request": "launch",
-            "command": "ts-node -- ${workspaceFolder}/index.ts",
+            "command": "NODE_ENV=debug ts-node -- ${workspaceFolder}/index.ts",
             "cwd": "${fileDirname}",
             "internalConsoleOptions": "openOnSessionStart",
             "skipFiles": [
