@@ -1,9 +1,8 @@
 import { parse, validateSchema, buildSchema } from 'graphql';
 import fs from 'fs';
+import schemaStore from '../stores/schemaStore.ts';
 
-const schemaString = fs.readFileSync(__dirname.concat('/schema.graphql'), 'utf8');
 const baseSchema = fs.readFileSync(__dirname.concat('/schema_base.graphql'), 'utf8');
-const parsedSchema = parse(schemaString);
 
 let globalQueriesSingular = '';
 let globalQueriesplural = '';
@@ -143,14 +142,15 @@ const reconstructGraphQLSchema = (definitions: any) => {
 	return schema;
 };
 
-const reconstructedSchema = reconstructGraphQLSchema(parsedSchema.definitions);
 
 function getObjectKeys(obj: { [key: string]: any }): string[] {
 	return Object.keys(obj);
 }
 
-const schemaDefinition = (): any => {
-	// console.log(reconstructedSchema);
+const schemaDefinition = async (): Promise<any> => {
+	const schemaString = await schemaStore.getState();
+    const parsedSchema = parse(String.raw`${schemaString.state}`);
+	const reconstructedSchema = reconstructGraphQLSchema(parsedSchema.definitions);
 	const mySchema = buildSchema(reconstructedSchema);
 
 	const errors = validateSchema(mySchema);
