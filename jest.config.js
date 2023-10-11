@@ -5,7 +5,7 @@ module.exports = {
     transform: {
       '^.+\\.tsx?$': 'ts-jest',
     },
-    globalSetup: '<rootDir>/src/__tests__/setup.ts',
+    // globalSetup: '<rootDir>/src/__tests__/setup.ts',
     // globalTeardown: '<rootDir>/src/__tests__/teardown.ts',
     testPathIgnorePatterns: ["<rootDir>/src/__tests__/setup.ts", "<rootDir>/src/__tests__/teardown.ts"],
   };
