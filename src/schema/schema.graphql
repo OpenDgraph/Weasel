@@ -8,7 +8,7 @@ type User {
 	teste5: User! @hasInverse(field: teste5)
 	teste6: User @hasInverse(field: teste6)
 	id: ID!
-	name: String!
+	name: String
 	messages: [Message]
 }
 

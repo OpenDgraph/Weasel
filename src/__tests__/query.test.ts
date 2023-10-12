@@ -2,10 +2,13 @@ import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 
 let uri: string;
 
-if (process.env.RUNNING_JEST === 'true' || process.env.NODE_ENV === 'test') {
-	uri = 'http://app:4001/graphql';
+if (
+	process.env.RUNNING_JEST === 'true' ||
+	process.env.NODE_ENV === 'test'
+) {
+	uri = 'http://app:4004/graphql';
 } else {
-	uri = 'http://localhost:4001/graphql';
+	uri = 'http://localhost:4004/graphql';
 }
 
 const client = new ApolloClient({
@@ -19,8 +22,8 @@ describe('Mutations', () => {
 			mutation: gql`
 				mutation MT1 {
 					add {
-						addUser(input: { title: "teste michel 2" }) {
-							title
+						addUser(input: { name: "Michael Keaton" }) {
+							name
 							id
 						}
 					}
@@ -32,7 +35,8 @@ describe('Mutations', () => {
 		expect(data.add).toHaveProperty('addUser');
 		expect(data.add.addUser).toEqual(expect.any(Object));
 		expect(data.add.addUser).toHaveProperty('id');
-		expect(data.add.addUser).toHaveProperty('title');
+		expect(data.add.addUser).toHaveProperty('name');
+		expect(data.add.addUser.name).toEqual('Michael Keaton');
 	}, 3000);
 });
 
@@ -45,6 +49,7 @@ describe('Queries', () => {
 						queryUsers {
 							id
 							title
+							name
 						}
 					}
 				}
