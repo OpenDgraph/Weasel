@@ -18,7 +18,6 @@ const client = new ApolloClient({
 
 describe('Mutations', () => {
 	it('should add User', async () => {
-		console.log('uri', uri);
 		const { data } = await client.mutate({
 			mutation: gql`
 				mutation MT1 {
@@ -42,9 +41,7 @@ describe('Mutations', () => {
 });
 
 describe('Queries', () => {
-	console.log('uri', uri);
 	it('should queryUsers', async () => {
-		console.log('uri', uri);
 		const { data } = await client.query({
 			query: gql`
 				{
