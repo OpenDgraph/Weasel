@@ -5,19 +5,11 @@ services:
     ports:
       - "4001:4001"
       - "4004:4004"
-    command: yarn startTestServer
-    environment:
-      - RUNNING_JEST=true
+    command: yarn start
     depends_on:
       - dgraph-alpha
       - redis
-  test-api:
-    build: .
-    command: /bin/sh -c "sleep 10 && yarn test"
-    depends_on:
-      - app
-    environment:
-      - RUNNING_JEST=true
+
   dgraph-zero:
     image: dgraph/dgraph:latest
     ports:
